@@ -114,30 +114,38 @@ char rotate(char ch, int num){
 //data in array given, looking for a key that will give
 //you the best match.
 int findKey(float given[], float found[]){
-	float difference = 100.0;
-	float temp = 0.0;
-	int position;
-	int firstit = 1;
-	for(int x = 0; x < 26; x++){
-		printf("Given: %f Found: %f\n", given[x], found[x]);
-	}
-	for(int i = 0; i < 2; i++){
-		for(int j = 0; j < 26; j++){
-			if(found[j] > given[i]){
-				temp = found[j] - given[i];
+	float temp;
+	float tempdiff;
+	float totaldiff = 100000.00;
+	for(int i = 0; i < 26; i++){
+		moveArray(found, 1);
+		for(int x = 0; x < 26; x++){
+			if(given[x] > found[x]){
+				tempdiff += given[x] - found[x];
 			}else{
-				temp = given[i] - found[j];
-			}
-			if(temp < difference){
-				difference = temp;
-				position = j;
+				tempdiff += found[x] - given[x];
 			}
 		}
-		if(i > position)
-			key = i - position;
-		else
-			key = position - i;
+		if(tempdiff < totaldiff){
+			totaldiff = tempdiff;
+			key = i+1;
+		}
+		tempdiff = 0;
 	}
+}
+
+//Move array one spot to the left
+void moveArray(float data[], int shift){
+	int i, j;
+	int n = 26;
+	float tmp;
+	for (i = 0; i < shift; i++) {
+							 tmp = data[0];
+							 for (j = 1; j <= n - 1; j++) {
+											 data[j - 1] = data[j];
+							 }
+							 data[n - 1] = tmp;
+			 }
 }
 
 //Decrypt the encoded text in the input file using the key

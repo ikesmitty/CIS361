@@ -2,8 +2,8 @@ cipher: cipher.o
 	gcc cipher.o -o cipher
 cipher.o: cipher.c
 
-test: test1 test2
+test: test10 test7
 test1: 
-	./cipher 1 5 data.txt data.out
+	./cipher 1 10 text10.txt test10.txt
 test2:
-	./cipher 2 5 data.out data.bak
+	./cipher 1 7 text7.txt test7.txt
