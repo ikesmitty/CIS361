@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
 		printf("Not enough arguments. Please enter the letter frequency file and the file you want to decrypt and it's output\n");
 		return -1;
 	}
-		
+
 	letFreq = argv[1];
 	FILE *freq;
 	freq = fopen(argv[1], "r");
@@ -39,8 +39,8 @@ int main(int argc, char* argv[]){
 	if(input == NULL){
 		printf("Could not find input file\n");
 		exit(1);
-	}	
-	
+	}
+
 	FILE *output = fopen(outputFile, "w");
 	if(output == NULL){
 		printf("Could not find output file\n");
@@ -50,10 +50,8 @@ int main(int argc, char* argv[]){
 	calcFreq(found, input);
 	findKey(given, found);
 	printf("We have found our key: %d\n", key);
-	decrypt(key, input, output);
-	fclose(freq);
-	fclose(input);
-	fclose(output);
+	FILE *final = fopen(inputFile, "rb");
+	decrypt(key, final, output);
 }
 
 //Load array given with the letter frequencies for
@@ -69,6 +67,7 @@ void readFreq(float given[], FILE *letFreq){
 		given[x] = frequency;
 		x++;
 	}
+	fclose(letFreq);
 }
 
 //Read the encoded text from an input file and accumulate
@@ -80,7 +79,7 @@ void calcFreq(float found[], FILE *datafile){
 	float count[26] = {0};
 	while((c=fgetc(datafile)) != EOF){
 		if(c == ' '){
-		
+
 		}else if(isalpha(c)){
 			c = tolower(c);
 			if(c >= 'a' && c <= 'z')
@@ -92,6 +91,7 @@ void calcFreq(float found[], FILE *datafile){
 		frequency = count[i]/totalCharCount;
 		found[i] = frequency;
 	}
+	fclose(datafile);
 }
 
 //Rotate the character in parameter ch down the alphabet
@@ -118,7 +118,10 @@ int findKey(float given[], float found[]){
 	float temp = 0.0;
 	int position;
 	int firstit = 1;
-	for(int i = 0; i < 26; i++){
+	for(int x = 0; x < 26; x++){
+		printf("Given: %f Found: %f\n", given[x], found[x]);
+	}
+	for(int i = 0; i < 2; i++){
 		for(int j = 0; j < 26; j++){
 			if(found[j] > given[i]){
 				temp = found[j] - given[i];
@@ -134,16 +137,18 @@ int findKey(float given[], float found[]){
 			key = i - position;
 		else
 			key = position - i;
-		break;
 	}
 }
 
 //Decrypt the encoded text in the input file using the key
 //and display the decoded text
 void decrypt(int key, FILE *datafile, FILE *outfile){
-	char ch;
+	int c;
 	key = -key;
-	while(fscanf(datafile, "%c", &ch) != EOF){
-		printf("%c", rotate(ch, key));
+	printf("Here is our decrypted file.\n");
+	while((c=fgetc(datafile)) != EOF){
+		fprintf(outfile, "%c", rotate(c, key));
+		printf("%c", rotate(c, key));
 	}
+	fclose(datafile);
 }
