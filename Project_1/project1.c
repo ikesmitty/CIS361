@@ -140,12 +140,12 @@ void moveArray(float data[], int shift){
 	int n = 26;
 	float tmp;
 	for (i = 0; i < shift; i++) {
-							 tmp = data[0];
-							 for (j = 1; j <= n - 1; j++) {
-											 data[j - 1] = data[j];
-							 }
-							 data[n - 1] = tmp;
-			 }
+		tmp = data[0];
+		for (j = 1; j <= n - 1; j++) {
+			data[j - 1] = data[j];
+		}
+		data[n - 1] = tmp;
+	}
 }
 
 //Decrypt the encoded text in the input file using the key
